@@ -11,14 +11,24 @@ public class UserClass {
 	private String uiId;
 	private String uiPwd;
 	private String uiRegdate;
-	
+	private boolean saveId;
 	
 	@Override
 	public String toString() {
 		return "UserClass [ciNo=" + ciNo + ", ciName=" + ciName + ", ciDesc=" + ciDesc + ", uiNo=" + uiNo + ", uiName="
 				+ uiName + ", uiAge=" + uiAge + ", uiId=" + uiId + ", uiPwd=" + uiPwd + ", uiRegdate=" + uiRegdate
-				+ ", address=" + address + "]";
+				+ ", save=" + saveId + ", address=" + address + "]";
 	}
+	
+	
+	public boolean isSaveId() {
+		return saveId;
+	}
+	public void setSave(boolean save) {
+		this.saveId = save;
+	}
+	
+	
 	public int getCiNo() {
 		return ciNo;
 	}

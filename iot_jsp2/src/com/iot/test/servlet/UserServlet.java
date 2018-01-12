@@ -25,7 +25,7 @@ public class UserServlet extends HttpServlet {
 
 		int idx = uri.lastIndexOf("/");
 		if (idx != -1) {
-			return uri.substring(idx+1);
+			return uri.substring(idx + 1);
 		}
 		return "";
 	}
@@ -43,26 +43,27 @@ public class UserServlet extends HttpServlet {
 	}
 
 	public void doProcess(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		req.setCharacterEncoding("utf-8");
-		res.setCharacterEncoding("utf-8");
-		res.setContentType("text/html;charset=utf-8");
+		System.out.println("encode:" +req.getCharacterEncoding());
 		PrintWriter out = res.getWriter();
 		String uri = req.getRequestURI();
 		String cmd = getCommand(uri);
 		if (cmd.equals("login")) {
-			HashMap<String, Object> hm = us.login(req);
+			HashMap<String, Object> hm = us.login(req, res);
 			out.println(gs.toJson(hm));
-		}else if (cmd.equals("logout")) {
+		} else if (cmd.equals("logout")) {
 			us.logout(req);
 			RequestDispatcher rd = req.getRequestDispatcher("/view/user/login");
 			rd.forward(req, res);
-		}else if(cmd.equals("signin")) {
+		} else if (cmd.equals("signin")) {
 			us.signin(req);
 			out.println(req.getAttribute("resStr"));
-		}else if(cmd.equals("list")) {
-			 ArrayList<UserClass> userList = us.getUserList();
+		} else if (cmd.equals("list")) {
+			ArrayList<UserClass> userList = us.getUserList();
 			out.println(gs.toJson(userList));
-			
+		} else if (cmd.equals("delete")) {
+			out.println(us.deleteUser(req));
+		} else if (cmd.equals("update")) {
+			out.println(us.updateUser(req));
+		}
 	}
-}
 }

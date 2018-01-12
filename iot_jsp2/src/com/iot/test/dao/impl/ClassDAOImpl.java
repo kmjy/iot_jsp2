@@ -4,38 +4,152 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
-
 import com.iot.test.common.DBCon;
 import com.iot.test.dao.ClassDAO;
+import com.iot.test.utils.DBUtil;
 import com.iot.test.vo.ClassInfo;
 
-public class ClassDAOImpl implements ClassDAO{
+public class ClassDAOImpl implements ClassDAO {
+
+	
+	@Override
+	public ArrayList<ClassInfo> selectClassList() {
+		 ArrayList<ClassInfo> classList = new   ArrayList<ClassInfo>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			con = DBCon.getCon();
+			String sql = "select * from class_info";
+			ps = con.prepareStatement(sql);
+		
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				ClassInfo ci = new ClassInfo();
+				
+				ci.setCiDesc(rs.getString("cidesc"));
+				ci.setCiName(rs.getString("ciname"));
+				ci.setCiNo(rs.getInt("cino"));
+				
+				classList.add(ci);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+
+		return classList;
+
+	}
+	
+	
 
 	@Override
-	public List<ClassInfo> selectClassList() {Connection con = null;
-	List<ClassInfo> classList = new ArrayList<ClassInfo>();
-	PreparedStatement ps = null;
-	ResultSet rs = null;
-	try {
-		con = DBCon.getCon();
-		String sql = "select *from class_info";
-		ps = con.prepareStatement(sql);
-		rs = ps.executeQuery();
-		while (rs.next()) {
-			ClassInfo ci = new ClassInfo();
-	
-			ci.setCiDesc(rs.getString("cidesc"));
-			ci.setCiName(rs.getString("ciname"));
-			ci.setCiNo(rs.getInt("cino"));
-			classList.add(ci);
+
+	public ClassInfo selectClass(int ciNo) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			con = DBCon.getCon();
+			String sql = "select * from class_info";
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				ClassInfo ci = new ClassInfo();
+				ci.setCiDesc(rs.getString("cidesc"));
+				ci.setCiName(rs.getString("ciname"));
+				ci.setCiNo(rs.getInt("cino"));
+
+				return ci;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			DBUtil.closeAll(rs, con, ps);
 		}
-	} catch (Exception e) {
-		e.printStackTrace();
+
+		return null;
 
 	}
 
-	return classList;
+	@Override
+	public int insertClass(ClassInfo ci) {
 
+		Connection con = null;
+		PreparedStatement ps = null;
+	
+		try {
+			con = DBCon.getCon();
+			String sql = "insert into class_info(ciname, cidesc)\r\n" + " values(?,?)";
+			ps = con.prepareStatement(sql);
+			ps.setString(1, ci.getCiName());
+			ps.setString(2, ci.getCiDesc());
+			return ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(con);
+			DBUtil.close(ps);
+
+		}
+		return 0;
 	}
+
+	@Override
+	public int updateClass(ClassInfo ci) {
+
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = DBCon.getCon();
+			String sql = "update class_info set ciName=?,ciDesc=? where cino=?";
+			ps = con.prepareStatement(sql);
+			
+			ps.setString(1, ci.getCiName());
+			ps.setString(2, ci.getCiDesc());
+			ps.setInt(3, ci.getCiNo());
+
+			return ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(con);
+			DBUtil.close(ps);
+
+		}
+		return 0;
+	}
+
+	@Override
+	public int deleteClass(ClassInfo ci) {
+
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = DBCon.getCon();
+			String sql = "delete from class_info where ciNo=?";
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, ci.getCiNo());
+			return ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(con);
+			DBUtil.close(ps);
+
+		}
+		return 0;
+	}
+
+
+
+	
+
+
+
 }

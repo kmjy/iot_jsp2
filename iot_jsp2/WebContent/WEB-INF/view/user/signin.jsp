@@ -3,11 +3,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>회원가입</title>
 </head>
 <link rel="stylesheet" href="<%=rootPath%>/ui/css/sign.css" />
 <body>
-	<jsp:include page="/WEB-INF/view/common/header.jsp" flush="false" />
+	<jsp:include page="/WEB-INF/view/common/header.jspf" flush="false" />
 
 	<div class="container">
 		<div class="starter-template">
@@ -86,7 +86,7 @@ function signin(){
 }
 $(document).ready(function(){
 	$.ajax({
-		url : '/class/list',
+		url : '/user/list',
 		type : 'get',
 		success:function(res){
 			var list = JSON.parse(res);
@@ -94,7 +94,7 @@ $(document).ready(function(){
 			for(var ci of list){
 				str += "<option value='" + ci.ciNo + "'>" + ci.ciName +"</option>";
 			}
-			//document.getElementById("ciNo").insertAdjacentHTML("beforeend",str);
+		
 			$("#ciNo").html(str);
 		},
 		error:function(xhr,status,error){
